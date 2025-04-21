@@ -46,16 +46,15 @@ public class UserController {
             // Convertir UserRequestDTO a User
             User user = convertToUser(userRequest);
 
-            // Usamos el servicio para registrar el usuario
+            // Se usa el servicio para registrar el usuario
             user = userService.registerUser(user);
 
-            // Convertimos el usuario a un DTO para enviar la respuesta
+            // Se convierte el usuario a un DTO para enviar la respuesta
             UserResponseDTO response = new UserResponseDTO(user);
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
-            // Si hubo un error al registrar (ej. correo ya registrado)
-            return new ResponseEntity<>(new ErrorResponse("El correo ya registrado"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -65,9 +64,7 @@ public class UserController {
         user.setName(userRequest.getName());
         user.setEmail(userRequest.getEmail());
         user.setPassword(userRequest.getPassword());
-        // Aquí deberías también mapear la lista de teléfonos, si es necesario
-        // user.setPhones(userRequest.getPhones());
-        user.setIsActive(true); // Asumimos que el usuario es activo por defecto
+        user.setIsActive(true); // Asumo que el usuario es activo por defecto
         user.setCreated(LocalDateTime.now());
         user.setModified(LocalDateTime.now());
         user.setLastLogin(LocalDateTime.now());
